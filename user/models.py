@@ -21,11 +21,3 @@ class User(AbstractUser):
 
     def __str__(self):
         return "%s %s" % ("Пользователь: ", self.email)
-
-    class Meta:
-        permissions = [
-            (
-                'view_users',
-                'Can view users'
-            ),
-        ]
