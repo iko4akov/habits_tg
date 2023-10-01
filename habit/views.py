@@ -3,11 +3,11 @@ from rest_framework import generics
 from habit.models import Habit
 from habit.paginators import HabitPaginator
 from habit.permissions import IsOwner
-from habit.serializers import HabitSerializer
+from habit.serializers import HabitSerializer, HabitCreateUpdateSerializer
 
 
 class HabitCreateAPIView(generics.CreateAPIView):
-    serializer_class = HabitSerializer
+    serializer_class = HabitCreateUpdateSerializer
 
     # permission_classes = [IsModerator]
     # permission_classes = [AllowAny]
@@ -36,7 +36,7 @@ class HabitRetrieveAPIView(generics.RetrieveAPIView):
 
 
 class HabitUpdateAPIView(generics.UpdateAPIView):
-    serializer_class = HabitSerializer
+    serializer_class = HabitCreateUpdateSerializer
     queryset = Habit.objects.all()
     permission_classes = [IsOwner]
 
