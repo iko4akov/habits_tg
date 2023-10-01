@@ -26,8 +26,19 @@ class HabitListAPIView(generics.ListAPIView):
         if self.request.user.is_staff:
             return Habit.objects.all().order_by('pk')
         else:
-            return Habit.objects.filter(public=True).order_by('pk')
+            return Habit.objects.filter(owner=self.request.user).order_by('pk')
 
+class HabitListPublicAPIView(generics.ListAPIView):
+    serializer_class = HabitSerializer
+    pagination_class = HabitPaginator
+
+    def get_queryset(self):
+        if self.request.user.is_staff:
+            return Habit.objects.all().order_by('pk')
+        else:
+            queryset = Habit.objects.filter(public=True)
+            queryset = queryset.exclude(owner=self.request.user).order_by('pk')
+            return queryset
 
 class HabitRetrieveAPIView(generics.RetrieveAPIView):
     serializer_class = HabitSerializer
