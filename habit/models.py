@@ -8,10 +8,12 @@ class Habit(models.Model):
     location = models.CharField(max_length=20, verbose_name='место', **NULLABLE)
     time = models.TimeField(auto_now=True, verbose_name='время выполнения')
     action = models.CharField(max_length=50, verbose_name='действие')
+
     nice_habit = models.BooleanField(verbose_name='приятная привычка', default=False)
     parent = models.ForeignKey('self', related_name='children', **NULLABLE, on_delete=models.CASCADE)
+
     period = models.IntegerField(default=1, verbose_name='периодичность')
-    reward = models.CharField(max_length=100, verbose_name='награда')
+    reward = models.CharField(max_length=100, verbose_name='награда', **NULLABLE)
     work_time = models.IntegerField(verbose_name='время на выполнение')
     public = models.BooleanField(default=False, verbose_name='публичность')
 
