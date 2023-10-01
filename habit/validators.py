@@ -33,3 +33,14 @@ class WorkTimeValidator:
         if work_time:
             if int(work_time) >= 120:
                 raise ValidationError("Время на выполнение привычки должно быть не больше 120")
+
+
+class PeriodValidator:
+    def __init__(self, period):
+        self.period = period
+
+    def __call__(self, value):
+        period = dict(value).get(self.period)
+        if period:
+            if int(period) > 7:
+                raise ValidationError("Привычка не может иметь периодичность выполнения реже чем раз в неделю")
