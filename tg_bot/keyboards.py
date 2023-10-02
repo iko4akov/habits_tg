@@ -1,10 +1,10 @@
 from aiogram.types import (ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton)
 
 main_habit = [
+    [KeyboardButton(text='Получить ID')],
     [KeyboardButton(text='Регистрация')],
-    [KeyboardButton(text='Создать'), KeyboardButton(text='Редактировать')],
-    [KeyboardButton(text='Посмотреть все'), KeyboardButton(text='Посмотреть одну')],
-    [KeyboardButton(text='Удалить'), KeyboardButton(text='Посмотреть публичные')]
+    [KeyboardButton(text='Посмотреть все ваши привычки')],
+    [KeyboardButton(text='Посмотреть публичные привычки')]
 ]
 
 main = ReplyKeyboardMarkup(

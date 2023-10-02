@@ -45,6 +45,7 @@ INSTALLED_APPS = [
 
     'user',
     'habit',
+    'tg_bot',
 ]
 
 MIDDLEWARE = [

@@ -1,12 +1,12 @@
 import re
 
 from aiogram import Router, F, types
-from aiogram.client import bot
 from aiogram.filters import CommandStart
 from aiogram.types import Message
 
-
+from filters import Registration
 import keyboards as kb
+from tg_bot.db_services import HandlerAPIRequests
 
 router = Router()
 
@@ -23,29 +23,65 @@ async def command_start_handler(message: Message) -> None:
 
 @router.message(F.text == 'Регистрация')
 async def register(message: types.Message) -> None:
-    await message.reply(f"введи свою почту и пароль через пробел")
+    await message.reply(f"введи свою почту и пароль через //\n пример: asdfg@ewqewq.com//213ewq3214")
 
-@router.callback_query()
-async def register(callback: CallbackQuery) -> None:
-    pattern.findall(message.text)
-    await message.reply(f"Почта получена, Введите пароль")
+@router.message(Registration())
+async def get_data(message: types.Message) -> None:
+    if '//' in message.text:
+        data = {}
+        message_list = message.text.split('//')
+        data['email'] = message_list[0]
+        data['password'] = message_list[1]
+        data['telegram_id'] = message.from_user.id
+        data['is_active'] = True
+        api_handler = HandlerAPIRequests(data)
 
-@router.message(F.text == 'sad')
-async def commands(message: types.Message) -> None:
-    await message.answer(f"Ваш ID: {message.from_user.id}")
-    await message.reply(f"Ваши данные {message.from_user.__dict__}")
-    await message.answer_photo(
-        'https://yandex.ru/images/search?text=картинки&img_url=https%3A%2F%2Fscontent-hel3-1.cdninstagram.com%2Fv%2Ft51.2885-15%2Fe35%2F17332957_1867883113499005_8526655979834572800_n.jpg%3F_nc_ht%3Dscontent-hel3-1.cdninstagram.com%26_nc_cat%3D101%26_nc_ohc%3DoprMtaC8mp0AX_RnE9U%26edm%3DAABBvjUBAAAA%26ccb%3D7-4%26oh%3Db98ff88e072510cdede76e0aa962e84a%26oe%3D61818127%26_nc_sid%3D83d603&pos=0&rpt=simage&stype=image&lr=35&parent-reqid=1696171356622437-4554712149110151382-balancer-l7leveler-kubr-yp-sas-101-BAL-7502&source=serp')
+        if api_handler.create_user():
+            await message.reply("Регистрация прошла успешо")
+        else:
+            await message.answer('что то не так')
+
+@router.message(F.text == 'Получить ID')
+async def get_id(message: types.Message):
+    await message.answer(f"{message.from_user.id}")
+
+@router.message(F.text == 'Посмотреть все ваши привычки')
+async def get_id(message: types.Message):
+    data = {}
+    data['telegram_id'] = message.from_user.id
+    api_handler = HandlerAPIRequests(data)
+    habits = api_handler.habit_list_owner()
+    if habits is not None:
+        for habit in habits:
+            await message.answer(habit)
+    else:
+        await message.answer('У вас нет еще привычек')
+@router.message(F.text == 'Посмотреть публичные привычки')
+async def get_id(message: types.Message):
+    data = {}
+    data['telegram_id'] = message.from_user.id
+    api_handler = HandlerAPIRequests(data)
+    habits = api_handler.habit_list_public()
+    if habits is not None:
+        for habit in habits:
+            await message.answer(str(habit))
+    else:
+        await message.answer('бежда')
+
 
 
 @router.message()
 async def echo_handler(message: types.Message) -> None:
-    """
-    Handler will forward receive a message back to the sender
-
-    By default, message handler will handle all message types (like a text, photo, sticker etc.)
-    """
     try:
-        await message.send_copy(chat_id=message.chat.id)
+        await message.answer(f'Что то не так, начни с начала -> /start')
+
     except TypeError:
         await message.answer("Enter /start")
+
+
+# @router.message(F.text == 'sad')
+# async def commands(message: types.Message) -> None:
+#     await message.answer(f"Ваш ID: {message.from_user.id}")
+#     await message.reply(f"Ваши данные {message.from_user.__dict__}")
+#     await message.answer_photo(
+#         'https://yandex.ru/images/search?text=картинки&img_url=https%3A%2F%2Fscontent-hel3-1.cdninstagram.com%2Fv%2Ft51.2885-15%2Fe35%2F17332957_1867883113499005_8526655979834572800_n.jpg%3F_nc_ht%3Dscontent-hel3-1.cdninstagram.com%26_nc_cat%3D101%26_nc_ohc%3DoprMtaC8mp0AX_RnE9U%26edm%3DAABBvjUBAAAA%26ccb%3D7-4%26oh%3Db98ff88e072510cdede76e0aa962e84a%26oe%3D61818127%26_nc_sid%3D83d603&pos=0&rpt=simage&stype=image&lr=35&parent-reqid=1696171356622437-4554712149110151382-balancer-l7leveler-kubr-yp-sas-101-BAL-7502&source=serp')

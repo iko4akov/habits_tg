@@ -16,6 +16,8 @@ class User(AbstractUser):
     check_email = models.BooleanField(default=False, verbose_name='Подтверждение почты')
     verify_number = models.CharField(max_length=150, verbose_name='verify_number', **NULLABLE)
 
+    telegram_id = models.IntegerField(verbose_name='ID use tg', **NULLABLE)
+
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 

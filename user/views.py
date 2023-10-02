@@ -1,15 +1,18 @@
 from django.contrib.auth import authenticate
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics, permissions, status
-from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework.generics import ListAPIView
 
+from habit.permissions import IsAdmin
 from user.models import User
 from user.serializers import UserCreateSerializer, MyTokenObtainPairSerializer
 
 
 class MyTokenObtainPairView(TokenObtainPairView):
+    permission_classes = (permissions.AllowAny,)
     serializer_class = MyTokenObtainPairSerializer
 
 class UserRegistrationAPIView(generics.CreateAPIView):
@@ -38,3 +41,10 @@ class UserLoginAPIView(APIView):
             return Response({'user': user.id, 'email': user.email, 'is_staff': user.is_staff})
         else:
             return Response({'error': 'Authentication failed'}, status=status.HTTP_401_UNAUTHORIZED)
+
+class UserListAPIView(ListAPIView):
+    queryset = User.objects.all()
+    permission_classes = (IsAdmin,)
+    serializer_class = UserCreateSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ('telegram_id',)
