@@ -1,3 +1,6 @@
+import json
+from datetime import datetime
+from django.db.models.base import ModelState
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics, permissions
 
@@ -5,6 +8,7 @@ from habit.models import Habit
 from habit.paginators import HabitPaginator
 from habit.permissions import IsOwner
 from habit.serializers import HabitSerializer, HabitCreateUpdateSerializer
+from habit.tasks import set_schedule
 from user.models import User
 
 
@@ -16,7 +20,17 @@ class HabitCreateAPIView(generics.CreateAPIView):
         new_habit = serializer.save()
         new_habit.owner = self.request.user
         new_habit.save()
-
+        if new_habit.owner.telegram_id:
+            current_datetime = datetime.now()
+            format_date = current_datetime.strftime('%Y-%m-%d %H:%M')
+            data = {
+                'tg': 636218845,
+                'action': new_habit.action,
+                'time': format_date,
+                'work_time': new_habit.work_time,
+                'location': new_habit.location
+            }
+            set_schedule.delay(**data)
 
 class HabitListAPIView(generics.ListAPIView):
     serializer_class = HabitSerializer

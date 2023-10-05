@@ -53,5 +53,4 @@ class HandlerAPIRequests:
     def habit_list_public(self):
         url_list = self.url + 'habit/public/'
         respounse = requests.get(url_list, headers=self.headers).json()
-        print(respounse.get('results'))
         return respounse.get('results')

@@ -1,16 +1,13 @@
-import re
-
 from aiogram import Router, F, types
 from aiogram.filters import CommandStart
 from aiogram.types import Message
 
-from filters import Registration
-import keyboards as kb
+from tg_bot.filters import Registration
+import tg_bot.keyboards as kb
 from tg_bot.db_services import HandlerAPIRequests
 
 router = Router()
 
-pattern = re.compile(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b')
 
 @router.message(CommandStart())
 async def command_start_handler(message: Message) -> None:
@@ -23,7 +20,7 @@ async def command_start_handler(message: Message) -> None:
 
 @router.message(F.text == 'Регистрация')
 async def register(message: types.Message) -> None:
-    await message.reply(f"введи свою почту и пароль через //\n пример: asdfg@ewqewq.com//213ewq3214")
+    await message.reply(f"Введи почту и пароль\nпример:\n<b>test@test.test//password</b>")
 
 @router.message(Registration())
 async def get_data(message: types.Message) -> None:
@@ -68,8 +65,6 @@ async def get_id(message: types.Message):
     else:
         await message.answer('бежда')
 
-
-
 @router.message()
 async def echo_handler(message: types.Message) -> None:
     try:
@@ -77,6 +72,7 @@ async def echo_handler(message: types.Message) -> None:
 
     except TypeError:
         await message.answer("Enter /start")
+
 
 
 # @router.message(F.text == 'sad')

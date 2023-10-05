@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 from config.settings import NULLABLE
 
@@ -6,7 +7,7 @@ from config.settings import NULLABLE
 class Habit(models.Model):
     owner = models.ForeignKey('user.User', on_delete=models.CASCADE, verbose_name='Пользователь', **NULLABLE)
     location = models.CharField(max_length=20, verbose_name='место', **NULLABLE)
-    time = models.TimeField(auto_now=True, verbose_name='время выполнения')
+    time = models.TimeField(default='12-00-00', verbose_name='время выполнения')
     action = models.CharField(max_length=50, verbose_name='действие')
 
     nice_habit = models.BooleanField(verbose_name='приятная привычка', default=False)
