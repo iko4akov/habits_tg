@@ -15,15 +15,15 @@ load_dotenv()
 @shared_task
 def set_schedule(**data):
     schedule, create = IntervalSchedule.objects.get_or_create(
-        every="1",
-        period=IntervalSchedule.DAYS,
+        every=str(data.get('period')),
+        period=IntervalSchedule.SECONDS,
     )
 
     PeriodicTask.objects.create(
         interval=schedule,
-        name='qq',
+        name='{ADA}',
         task='habit.tasks.send_habit',
-        args=json.dumps(['arg1', 'arg2']),
+        args=json.dumps([]),
         kwargs=json.dumps(
             data
         ),
@@ -32,12 +32,10 @@ def set_schedule(**data):
         )
 
 @shared_task()
-def send_habit(data):
-    print(data)
+def send_habit(*args, **data):
     bot_token = os.getenv('BOT_TOKEN')
     url = f'https://api.telegram.org/bot{bot_token}/sendMessage'
-    message_text = f'Я буду {data.get("action")} столько {data.get("work_time")} мин в {data.get("location")} ' \
-                   f'{data.get("tg")}'
+    message_text = f'Я буду {data.get("action")} столько {data.get("work_time")} мин в {data.get("location")}'
     params = {
         'chat_id': data.get('tg'),
         'text': message_text

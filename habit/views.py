@@ -10,7 +10,7 @@ from habit.permissions import IsOwner
 from habit.serializers import HabitSerializer, HabitCreateUpdateSerializer
 from habit.tasks import set_schedule
 from user.models import User
-
+from habit.services import format_date_time
 
 class HabitCreateAPIView(generics.CreateAPIView):
     serializer_class = HabitCreateUpdateSerializer
@@ -21,16 +21,17 @@ class HabitCreateAPIView(generics.CreateAPIView):
         new_habit.owner = self.request.user
         new_habit.save()
         if new_habit.owner.telegram_id:
-            current_datetime = datetime.now()
-            format_date = current_datetime.strftime('%Y-%m-%d %H:%M')
+            format_date = format_date_time(new_habit.time)
             data = {
-                'tg': 636218845,
+                'tg': new_habit.owner.telegram_id,
                 'action': new_habit.action,
                 'time': format_date,
                 'work_time': new_habit.work_time,
-                'location': new_habit.location
+                'location': new_habit.location,
+                'period': new_habit.period
             }
             set_schedule.delay(**data)
+
 
 class HabitListAPIView(generics.ListAPIView):
     serializer_class = HabitSerializer
