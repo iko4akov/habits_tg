@@ -2,7 +2,8 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 from user.models import User
 
-class UserRegistrationAPIViewTest(APITestCase):
+
+class UserAPIViewTest(APITestCase):
     def setUp(self):
         self.url = 'http://127.0.0.1:8000/user/'
         self.valid_data = {
@@ -11,7 +12,6 @@ class UserRegistrationAPIViewTest(APITestCase):
         }
 
     def test_user_registration_valid_data(self):
-
         url = self.url + 'register/'
         response = self.client.post(url, self.valid_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -55,3 +55,16 @@ class UserRegistrationAPIViewTest(APITestCase):
 
         response = self.client.get(self.url, headers=headers, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+
+from django.core import management
+from django.test import TestCase
+from user.models import User
+
+class CreateSuperUserCommandTest(TestCase):
+    def test_create_superuser(self):
+        management.call_command('csu')
+
+        super_user = User.objects.get(email='admin@admin.com')
+        self.assertTrue(super_user.is_superuser)
+        self.assertTrue(super_user.is_staff)

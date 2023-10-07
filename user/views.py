@@ -13,6 +13,7 @@ class MyTokenObtainPairView(TokenObtainPairView):
     permission_classes = (permissions.AllowAny,)
     serializer_class = MyTokenObtainPairSerializer
 
+
 class UserRegistrationAPIView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserCreateSerializer
@@ -24,7 +25,8 @@ class UserRegistrationAPIView(generics.CreateAPIView):
             user = serializer.save()
             user.set_password(request.data['password'])
             user.save()
-            return Response({'user_id': user.id, 'pass': user.password}, status=status.HTTP_201_CREATED)
+            data = {'user_id': user.id, 'pass': user.password}
+            return Response(data=data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 

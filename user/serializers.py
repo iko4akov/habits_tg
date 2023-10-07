@@ -15,6 +15,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
         return token
 
+
 class UserCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User

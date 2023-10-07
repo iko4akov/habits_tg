@@ -1,7 +1,8 @@
-from datetime import datetime, time
+from datetime import datetime
+
 
 def format_date_time(time: str) -> str:
-    hour_minute = '10:40:40.848787'.split(":")[:2]
+    hour_minute = time.split(":")[:2]
     new_datetime = datetime(
         year=datetime.now().year,
         month=datetime.now().month,

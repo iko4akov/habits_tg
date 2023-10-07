@@ -1,6 +1,3 @@
-import json
-from datetime import datetime
-from django.db.models.base import ModelState
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics, permissions
 
@@ -11,6 +8,7 @@ from habit.serializers import HabitSerializer, HabitCreateUpdateSerializer
 from habit.tasks import set_schedule
 from user.models import User
 from habit.services import format_date_time
+
 
 class HabitCreateAPIView(generics.CreateAPIView):
     serializer_class = HabitCreateUpdateSerializer
@@ -45,7 +43,8 @@ class HabitListAPIView(generics.ListAPIView):
             if self.request.user.is_staff:
                 return Habit.objects.all().order_by('pk')
             else:
-                return Habit.objects.filter(owner=self.request.user).order_by('pk')
+                habits = Habit.objects.filter(owner=self.request.user)
+                return habits.order_by('pk')
 
 
 class HabitListPublicAPIView(generics.ListAPIView):
@@ -61,8 +60,9 @@ class HabitListPublicAPIView(generics.ListAPIView):
                 return Habit.objects.all().order_by('pk')
             else:
                 queryset = Habit.objects.filter(public=True)
-                queryset = queryset.exclude(owner=self.request.user).order_by('pk')
-                return queryset
+                queryset = queryset.exclude(owner=self.request.user)
+
+                return queryset.order_by('pk')
 
 
 class HabitRetrieveAPIView(generics.RetrieveAPIView):

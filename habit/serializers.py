@@ -1,7 +1,8 @@
 from rest_framework import serializers
 
 from habit.models import Habit
-from habit.validators import NiceHabitValidator, WorkTimeValidator, PeriodValidator
+from habit.validators import NiceHabitValidator, \
+    WorkTimeValidator, PeriodValidator
 
 
 class HabitCreateUpdateSerializer(serializers.ModelSerializer):
@@ -9,7 +10,9 @@ class HabitCreateUpdateSerializer(serializers.ModelSerializer):
         model = Habit
         fields = '__all__'
         validators = [
-            NiceHabitValidator(parent='parent', nice_habit='nice_habit', reward='reward'),
+            NiceHabitValidator(
+                parent='parent', nice_habit='nice_habit', reward='reward'
+            ),
             WorkTimeValidator(work_time='work_time'),
             PeriodValidator(period='period')
         ]

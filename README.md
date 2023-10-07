@@ -6,4 +6,4 @@ get_random_secret_key()
 celery -A config beat -l info -S django
 celery -A config worker -l info -S django
 redis-server
-~~coverage run --source='.' manage.py test~~
+coverage run --source='.' manage.py test~~

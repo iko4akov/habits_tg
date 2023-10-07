@@ -13,15 +13,21 @@ class NiceHabitValidator:
         reward = dict(value).get(self.reward)
         if nice_habit:
             if parent is not None:
-                raise ValidationError("У приятной привычки не может быть связанной")
+                raise ValidationError(
+                    "У приятной привычки не может быть связанной"
+                )
             if reward:
-                raise ValidationError("У приятной привычки не может быть вознаграждения")
+                raise ValidationError(
+                    "У приятной привычки не может быть вознаграждения"
+                )
 
         else:
             if parent:
                 if parent.nice_habit:
                     raise ValidationError(
-                        'Не верная привычка в nice_habit, необходимо наследоваться от полезных привычек')
+                        'Не верная привычка в nice_habit,'
+                        ' необходимо наследоваться от полезных привычек')
+
 
 class WorkTimeValidator:
 
@@ -32,7 +38,9 @@ class WorkTimeValidator:
         work_time = dict(value).get(self.work_time)
         if work_time:
             if int(work_time) >= 120:
-                raise ValidationError("Время на выполнение привычки должно быть не больше 120")
+                raise ValidationError(
+                    "Время на выполнение привычки должно быть не больше 120"
+                )
 
 
 class PeriodValidator:
@@ -43,4 +51,7 @@ class PeriodValidator:
         period = dict(value).get(self.period)
         if period:
             if int(period) > 7:
-                raise ValidationError("Привычка не может иметь периодичность выполнения реже чем раз в неделю")
+                raise ValidationError(
+                    "Привычка не может иметь периодичность"
+                    " выполнения реже чем раз в неделю"
+                )

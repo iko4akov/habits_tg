@@ -5,12 +5,11 @@ import os
 import requests
 from dotenv import load_dotenv
 
-
 from celery import shared_task
 from django_celery_beat.models import PeriodicTask, IntervalSchedule
 
-
 load_dotenv()
+
 
 @shared_task
 def set_schedule(**data):
@@ -29,13 +28,16 @@ def set_schedule(**data):
         ),
         expires=datetime.utcnow() + timedelta(seconds=30),
         start_time=data.get('time')
-        )
+    )
 
-@shared_task()
+
+@shared_task
 def send_habit(*args, **data):
     bot_token = os.getenv('BOT_TOKEN')
     url = f'https://api.telegram.org/bot{bot_token}/sendMessage'
-    message_text = f'Я буду {data.get("action")} столько {data.get("work_time")} мин в {data.get("location")}'
+    message_text = f'Я буду {data.get("action")}' \
+                   f' столько {data.get("work_time")} мин' \
+                   f' в {data.get("location")}'
     params = {
         'chat_id': data.get('tg'),
         'text': message_text
