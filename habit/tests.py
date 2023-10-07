@@ -1,4 +1,3 @@
-import os
 from datetime import datetime
 
 from django.test import TestCase
@@ -11,6 +10,7 @@ from habit.services import format_date_time
 from dotenv import load_dotenv
 
 load_dotenv()
+
 
 class HabitMixin(APITestCase):
     reg_url = 'http://127.0.0.1:8000/user/register/'
@@ -109,6 +109,7 @@ class HabitAPITest(HabitMixin, APITestCase):
         self.assertEqual(respounse.status_code, status.HTTP_200_OK)
 
         self.assertEqual(Habit.objects.get(pk=6).action, "test patch")
+
 
 class FormatDateTimeTestCase(TestCase):
     def test_format_date_time(self):
