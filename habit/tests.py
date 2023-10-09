@@ -8,7 +8,6 @@ from habit.models import Habit
 from habit.services import format_date_time
 
 from dotenv import load_dotenv
-
 load_dotenv()
 
 
