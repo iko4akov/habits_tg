@@ -1,3 +1,14 @@
+# run peoject for server
+
+1. connect server `$ ssh your_name@server_ip(example: 1.2.3.4)`
+
+2. clone project
+
+
+
+
+
+
 путь к venv 
 PS1="\u@\h:\w$ "
 для генерации secret key
