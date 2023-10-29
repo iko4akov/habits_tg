@@ -1,31 +1,35 @@
 version: '3'
+
 services:
   django:
     build:
       context: .
-      dockerfile: Dockerfile-django
+      dockerfile: Dockerfile.django
     ports:
       - "8000:8000"
     depends_on:
-      - db
-    environment:
-      - DJANGO_DB_HOST=db
+      - postgres
+      - redis
 
-  db:
+  postgres:
     build:
       context: .
-      dockerfile: Dockerfile-postgresql
+      dockerfile: Dockerfile.postgresql
     environment:
-      POSTGRES_DB: mydb
-      POSTGRES_USER: myuser
+      POSTGRES_DB: mydatabase
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: mypassword
 
   redis:
     build:
       context: .
-      dockerfile: Dockerfile-redis
+      dockerfile: Dockerfile.redis
 
   celery:
     build:
       context: .
-      dockerfile: Dockerfile-celery
+      dockerfile: Dockerfile.celery
+    depends_on:
+      - redis
+      - postgres
+    command: celery -A yourapp worker --loglevel=info

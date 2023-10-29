@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY_DJANGO')
+SECRET_KEY = 'django-insecure-cj#_7@gt5@z7mpkcgyxi+k76c=vchr#l1mlckd-ju+yca=jjoj'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -88,10 +88,9 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv(('DB_NAME')),
-        'HOST': os.getenv(('DB_HOST')),
-        'USER': os.getenv(('USER_PSQL')),
-        'PASSWORD': os.getenv(('PASS_PSQL')),
+        'NAME': 'db',
+        'USER': 'postgres',
+        'PASSWORD': 'mysecretpassword',
     }
 }
 
