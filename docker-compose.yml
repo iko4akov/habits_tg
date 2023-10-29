@@ -1,0 +1,31 @@
+version: '3'
+services:
+  django:
+    build:
+      context: .
+      dockerfile: Dockerfile-django
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      - DJANGO_DB_HOST=db
+
+  db:
+    build:
+      context: .
+      dockerfile: Dockerfile-postgresql
+    environment:
+      POSTGRES_DB: mydb
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+
+  redis:
+    build:
+      context: .
+      dockerfile: Dockerfile-redis
+
+  celery:
+    build:
+      context: .
+      dockerfile: Dockerfile-celery
