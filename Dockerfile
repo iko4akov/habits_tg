@@ -1,30 +1,16 @@
-FROM ubuntu:latest
+FROM python:3.11
 
-RUN apt-get update && apt-get install -y \
-    python3 \
-    python3-pip \
-    postgresql \
-    redis-server
+WORKDIR /code
 
-# Копируем код приложения в контейнер
-COPY . /app
+COPY ./requirements.txt .
 
-# Устанавливаем зависимости для Django
-RUN pip3 install django
+RUN apt-get update
+RUN apt-get install -y build-essential libssl-dev libffi-dev
+RUN pip install --upgrade pip
+RUN pip install aiohttp
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Определите рабочую директорию
-WORKDIR /app
+COPY . .
 
-# Создаем базу данных PostgreSQL и настраиваем ее
-RUN service postgresql start && \
-    su - postgres -c "createuser myuser -s" && \
-    su - postgres -c "createdb mydb"
-
-# Запускаем Redis-сервер
-CMD ["redis-server"]
-
-# Запускаем Django-сервер
-CMD ["python3", "manage.py", "runserver", "0.0.0.0:8000"]
-
-# Запускаем Celery (если он у вас есть)
-CMD ["celery", "worker", "--app=myapp"]
+# Команда для запуска Django-сервера
+#CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
