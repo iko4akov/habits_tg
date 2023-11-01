@@ -29,6 +29,7 @@ services:
       PGDATA: /var/lib/postgresql/data/pgdata
 
   redis:
+    build: .
     image: redis:latest
     healthcheck:
       test: [ "CMD", "redis-cli", "ping" ]
