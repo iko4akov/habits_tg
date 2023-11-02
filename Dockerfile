@@ -1,11 +1,17 @@
-FROM python:3.11
+FROM python:3
 
-WORKDIR /code
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
 
-COPY ./requirements.txt .
+RUN apt-get update && apt-get upgrade -y
+RUN apt-get install -y build-essential libpq-dev && apt-get clean
 
-RUN apt-get update
-RUN pip install --upgrade pip
-RUN pip install --no-cache-dir -r requirements.txt
+RUN adduser -rms /bin/bash userapp && chmod 777 /opt /run
 
-COPY . .
+WORKDIR .
+
+COPY --chown=userapp:userapp . .
+
+RUN pip install -r requirements.txt
+
+USER userapp
